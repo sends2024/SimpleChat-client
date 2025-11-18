@@ -5,9 +5,12 @@ import { fileURLToPath } from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 export function createMainWindow() {
     const win = new BrowserWindow({
-        icon: path.join(VITE_PUBLIC, 'electron-vite.svg'),
+        icon: path.join(VITE_PUBLIC, 'icon.ico'),
         webPreferences: {
-            preload: path.join(__dirname, 'preload.mjs')
+            preload: path.join(__dirname, 'preload.mjs'),
+            contextIsolation: true,
+            nodeIntegration: false,
+            sandbox: true
         }
     })
 
