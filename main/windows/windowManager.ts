@@ -1,14 +1,16 @@
 import { BrowserWindow } from 'electron'
 import { createMainWindow } from './mainWindow'
+import { createAuthWindow } from './authWindow'
 
-export type WindowKey = 'main'
+export type WindowKey = 'main' | 'auth'
 
 export interface WindowCreator {
     key: WindowKey
     create: () => BrowserWindow
 }
 const windowCreators: Record<WindowKey, () => BrowserWindow> = {
-    main: createMainWindow
+    main: createMainWindow,
+    auth: createAuthWindow
 }
 class WindowsManager {
     private windows = new Map<WindowKey, BrowserWindow>()

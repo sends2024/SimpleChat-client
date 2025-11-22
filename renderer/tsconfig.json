@@ -20,5 +20,5 @@
         },
         "composite": true
     },
-    "include": ["./src/**/*"]
+    "include": ["./src/**/*", "../types/**/*", "unocss.config.ts"]
 }

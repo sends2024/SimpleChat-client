@@ -1,5 +1,7 @@
 import HomePage from '@/pages/HomePage'
-import { createBrowserRouter, Navigate } from 'react-router'
+import AuthPage from '@/pages/AuthPage'
+
+import { createHashRouter, Navigate } from 'react-router'
 
 const route = [
     {
@@ -11,7 +13,12 @@ const route = [
         name: 'home',
         path: '/home',
         Component: HomePage
+    },
+    {
+        name: 'auth',
+        path: '/auth',
+        Component: AuthPage
     }
 ]
-const router = createBrowserRouter(route)
+const router = createHashRouter(route)
 export default router

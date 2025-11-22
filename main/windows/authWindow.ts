@@ -3,7 +3,7 @@ import path from 'node:path'
 import { RENDERER_DIST, VITE_DEV_SERVER_URL, VITE_PUBLIC } from '../config'
 import { fileURLToPath } from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-export function createMainWindow() {
+export function createAuthWindow() {
     const win = new BrowserWindow({
         icon: path.join(VITE_PUBLIC, 'icon.ico'),
         webPreferences: {
@@ -20,9 +20,9 @@ export function createMainWindow() {
     })
 
     if (VITE_DEV_SERVER_URL) {
-        win.loadURL(VITE_DEV_SERVER_URL)
+        win.loadURL(`${VITE_DEV_SERVER_URL}#/auth`)
     } else {
-        win.loadFile(path.join(RENDERER_DIST, 'index.html'))
+        win.loadFile(path.join(RENDERER_DIST, 'index.html'), { hash: '/auth' })
     }
     return win
 }
