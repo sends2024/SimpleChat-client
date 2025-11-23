@@ -1,5 +1,6 @@
 import { createRequire } from 'node:module'
 import path from 'node:path'
+import dotenv from 'dotenv'
 // 此处require为导入不支持esm导入的包时所用
 import { fileURLToPath } from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -12,3 +13,5 @@ export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(APP_ROOT, 'public') : RENDERER_DIST
 
 export const VITE_PUBLIC = process.env.VITE_PUBLIC
+const ENV_URL = path.join(APP_ROOT, '.env')
+dotenv.config({ path: ENV_URL })

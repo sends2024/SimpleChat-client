@@ -27,7 +27,8 @@ export default [
             // 允许any类型，允许空接口，仅对未使用变量报错
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/no-empty-interface': 'off',
-            '@typescript-eslint/no-unused-vars': 'warn'
+            '@typescript-eslint/no-unused-vars': 'warn',
+            '@typescript-eslint/no-unsafe-function-type': 'warn'
         }
     }
 ]

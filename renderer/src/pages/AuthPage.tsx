@@ -4,24 +4,29 @@ import { Button } from 'antd'
 export default function LoginPage() {
     const authStore = useAuthStore()
     const handleLogin = async () => {
-        if (await authStore.login({ userName: '1', password: '2' })) {
-            console.log('登录')
-            window.api.authIPC.succeededAuth()
+        const res = await authStore.login({ userName: 'nwzxx', password: '1239' })
+        if (res) {
+            window.api.authIPC.succeededAuth(useAuthStore.getState().user)
         }
     }
-    const handleAutoLogin = async () => {
-        if (await authStore.autoLogin()) {
-            console.log('自动登录')
+    const handleRegister = async () => {
+        if (
+            await authStore.register({
+                userName: 'nwzxx',
+                password: '1239',
+                email: '123@gmail.com'
+            })
+        ) {
+            window.api.authIPC.succeededAuth(useAuthStore.getState().user)
         }
     }
 
-    useEffect(() => {
-        handleAutoLogin()
-    }, [])
+    useEffect(() => {}, [])
 
     return (
         <>
             <Button onClick={handleLogin}>登录</Button>
+            <Button onClick={handleRegister}>注册</Button>
         </>
     )
 }

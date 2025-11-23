@@ -14,5 +14,8 @@ declare global {
         api: {
             authIPC: authIPC
         }
+        env: {
+            httpURL
+        }
     }
 }
