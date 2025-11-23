@@ -1,0 +1,8 @@
+import { ipcMain } from 'electron'
+import { WindowKey, windowsManager } from '../windows'
+
+export function registerWinHandler() {
+    ipcMain.on('win:close', (_event, key: WindowKey) => {
+        windowsManager.close(key)
+    })
+}
