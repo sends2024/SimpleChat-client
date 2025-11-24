@@ -2,7 +2,7 @@ import { useAuthStore } from '@/store'
 import { Form, Tabs, Button, Input, Checkbox } from 'antd'
 import { useState } from 'react'
 type loginFieldType = {
-    userName?: string
+    username?: string
     password?: string
     remember?: string
 }
@@ -22,10 +22,10 @@ export default function AuthForm() {
         }
     }
 
-    const handleLogin = async (payload: { userName: string; password: string }) => {
+    const handleLogin = async (payload: { username: string; password: string }) => {
         console.log(payload)
         const res = await authStore.login({
-            userName: payload.userName,
+            username: payload.username,
             password: payload.password
         })
 
@@ -34,13 +34,13 @@ export default function AuthForm() {
         }
     }
     const handleRegister = async (payload: {
-        userName: string
+        username: string
         password: string
         email: string
     }) => {
         if (
             await authStore.register({
-                userName: payload.userName,
+                username: payload.username,
                 password: payload.password,
                 email: payload.email
             })
@@ -57,7 +57,7 @@ export default function AuthForm() {
                 <Form onFinish={handleLogin} layout="vertical" autoComplete="off">
                     <Form.Item<loginFieldType>
                         label="用户名"
-                        name="userName"
+                        name="username"
                         rules={[{ required: true, message: '用户名为空!' }]}
                     >
                         <Input />

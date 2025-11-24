@@ -1,8 +1,8 @@
 import { create } from 'zustand'
 import { UserSchema } from '@/models'
 import { authRequest } from '@/api/http'
-type loginPayload = { userName: string; password: string }
-type registerPayload = { userName: string; password: string; email: string }
+type loginPayload = { username: string; password: string }
+type registerPayload = { username: string; password: string; email: string }
 
 interface UserState {
     user: UserSchema
@@ -15,7 +15,7 @@ interface UserState {
 
 export const useAuthStore = create<UserState>((set, get) => ({
     user: {
-        userName: '',
+        username: '',
         password: '',
         email: '',
         avatarURL: ''
@@ -59,7 +59,7 @@ export const useAuthStore = create<UserState>((set, get) => ({
     },
     logout: () => {
         get().setUser({
-            userName: '',
+            username: '',
             password: '',
             email: ''
         })

@@ -42,7 +42,7 @@ export const channelRequests = {
         })
     },
 
-    leaveChannelRequest: async (payload: null) => {
+    leaveChannelRequest: async () => {
         return await http.post<null>(`/api/channels/${channelID}/leave`, {}, {
             headers: {
                 Authorization: authToken
@@ -67,7 +67,7 @@ export const channelRequests = {
     },
 
     getMessagesRequest: async () => {
-        return await http.get<membersResponse>(`/api/channels/${channelID}/history?before=${beforeTime}`, {
+        return await http.get<messagesResponse>(`/api/channels/${channelID}/history?before=${beforeTime}`, {
             headers: {
                 Authorization: authToken
             }

@@ -7,10 +7,11 @@ export default function HomePage() {
         console.log('logout')
         window.api.authIPC.logout()
     }
+    
     return (
         <>
-            <h1 className="text-pink-100">{`欢迎回来${authStore.user.userName}`}</h1>
-            <h1 className="text-pink-100">{`你的邮箱${authStore.user.email}`}</h1>
+            <h1 className="text-pink">{`欢迎回来${authStore.user.username}`}</h1>
+            <h1 className="text-pink">{`你的邮箱${authStore.user.email}`}</h1>
             <Button onClick={handleLogout}>Logout</Button>
         </>
     )

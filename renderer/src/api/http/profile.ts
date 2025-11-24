@@ -9,7 +9,7 @@ type changeAvatarResponse = { avatar_url: string; }
 
 export const profileRequest = {
     changePwdRequest: async (payload: changePwdPayload) => {
-        return await http.pat<null>('/api/user/password', {
+        return await http.patch<null>('/api/user/password', {
             old_password: payload.old_password,
             new_password: payload.new_password
         })

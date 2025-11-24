@@ -12,7 +12,7 @@ type getInviteCodeResponse = { invite_code: string }
 type changeChannelNamePayload = { new_name: string }
 
 
-export const profileRequest = {
+export const manageChannelRequest = {
     createChannelRequest: async (payload: createChannelPayload) => {
         return await http.patch<createChannelResponse>('/api/channel/create', {
             channel_name: payload.channel_name
