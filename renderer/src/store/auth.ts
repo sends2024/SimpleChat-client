@@ -42,7 +42,7 @@ export const useAuthStore = create<UserState>((set, get) => ({
         if (result) {
             get().setUser(payload)
             get().setUser({ avatarURL: result.avatar_url })
-            
+
             localStorage.setItem('authToken', result.token)
             return true
         }

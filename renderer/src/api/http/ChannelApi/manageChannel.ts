@@ -1,4 +1,4 @@
-import { http } from '../'
+import { http } from '../..'
 
 const authToken = localStorage.getItem('authToken')
 let channelID = 'test Channel ID'

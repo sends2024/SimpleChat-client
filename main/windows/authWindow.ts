@@ -6,11 +6,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 export function createAuthWindow() {
     const win = new BrowserWindow({
         icon: path.join(VITE_PUBLIC, 'icon.ico'),
+        width: 480/1.2,
+        height: 672/1.2,
+        frame:false,
         webPreferences: {
             preload: path.join(__dirname, 'preload.mjs'),
             contextIsolation: true,
             nodeIntegration: false,
-
             sandbox: true
         }
     })

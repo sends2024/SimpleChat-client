@@ -1,5 +1,6 @@
 /// <reference types="vite-plugin-electron/electron-env" />
 import authIPC from './authIPC'
+import windowIPC from './winIPC'
 declare namespace NodeJS {
     interface ProcessEnv {
         APP_ROOT: string
@@ -13,9 +14,10 @@ declare global {
         electron: typeof import('@electron-toolkit/preload').electronAPI
         api: {
             authIPC: authIPC
+            windowIPC: windowIPC
         }
         env: {
-            httpURL
+            serviceURL
         }
     }
 }
