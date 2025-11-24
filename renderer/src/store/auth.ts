@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { UserSchema } from '@/models'
-import { authRequest } from '@/api'
+import { authRequest } from '@/api/http'
 type loginPayload = { userName: string; password: string }
 type registerPayload = { userName: string; password: string; email: string }
 
@@ -29,7 +29,7 @@ export const useAuthStore = create<UserState>((set, get) => ({
         }))
     },
     autoLogin: async () => {
-        const authToken = localStorage.getItem('token')
+        const authToken = localStorage.getItem('authToken')
         if (authToken) {
             if (authToken === 'valuable') {
                 console.log('自动登录')
