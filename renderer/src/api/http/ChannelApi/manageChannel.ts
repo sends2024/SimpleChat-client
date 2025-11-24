@@ -14,7 +14,7 @@ type changeChannelNamePayload = { new_name: string }
 
 export const profileRequest = {
     createChannelRequest: async (payload: createChannelPayload) => {
-        return await http.pat<createChannelResponse>('/api/channel/create', {
+        return await http.patch<createChannelResponse>('/api/channel/create', {
             channel_name: payload.channel_name
         }, {
             headers: {
@@ -57,7 +57,7 @@ export const profileRequest = {
     },
 
     changeChannelNameRequest: async (payload: changeChannelNamePayload) => {
-        return await http.pat<null>(`/api/channel/${channelID}`, {
+        return await http.patch<null>(`/api/channel/${channelID}`, {
             new_name: payload.new_name,
         }, {
             headers: {

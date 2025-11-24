@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { UserSchema } from '@/models'
-import { authRequest } from '@/api'
+import { authRequest } from '@/api/http'
 type loginPayload = { userName: string; password: string }
 type registerPayload = { userName: string; password: string; email: string }
 
