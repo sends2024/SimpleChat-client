@@ -11,7 +11,7 @@ body {
     width: 100%;
     height: 100vh;
 }
-/* drag可能导致某些问题，请尽量在此通过css样式解决
+/* drag可能导致组件库的组件交互被拦截，请尽量在此通过css样式解决
  */
 button,
 input,
