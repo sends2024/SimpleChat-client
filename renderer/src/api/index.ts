@@ -32,7 +32,19 @@ export const http = {
     post: async <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
         const res = await httpInstance.post<StandardResponse<T>>(url, data, config)
         return res.data.data
-    }
+    },
+    pat: async <T>(url: string, data?: any, config?: AxiosRequestConfig) => {
+        const res = await httpInstance.patch<StandardResponse<T>>(url, data, config)
+        return res.data.data
+    },
+    put: async <T>(url: string, data?: any, config?: AxiosRequestConfig) => {
+        const res = await httpInstance.put<StandardResponse<T>>(url, data, config)
+        return res.data.data
+    },
+    delete: async <T>(url: string, config?: AxiosRequestConfig) => {
+        const res = await httpInstance.delete<StandardResponse<T>>(url, config)
+        return res.data.data
+    },
 }
 
 export * from './auth'

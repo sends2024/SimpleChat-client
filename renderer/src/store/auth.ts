@@ -29,7 +29,7 @@ export const useAuthStore = create<UserState>((set, get) => ({
         }))
     },
     autoLogin: async () => {
-        const authToken = localStorage.getItem('token')
+        const authToken = localStorage.getItem('authToken')
         if (authToken) {
             if (authToken === 'valuable') {
                 console.log('自动登录')
