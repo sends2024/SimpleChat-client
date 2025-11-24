@@ -25,7 +25,7 @@ httpInstance.interceptors.response.use(
     }
 )
 export const http = {
-    get: async <T>(url: string, config: AxiosRequestConfig) => {
+    get: async <T>(url: string, config?: AxiosRequestConfig) => {
         const res = await httpInstance.get<StandardResponse<T>>(url, config)
         return res.data.data
     },
@@ -37,7 +37,7 @@ export const http = {
         const res = await httpInstance.patch<StandardResponse<T>>(url, data, config)
         return res.data.data
     },
-    delete: async <T>(url: string, config: AxiosRequestConfig) => {
+    delete: async <T>(url: string, config?: AxiosRequestConfig) => {
         const res = await httpInstance.delete<StandardResponse<T>>(url, config)
         return res.data.data
     },
