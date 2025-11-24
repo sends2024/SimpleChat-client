@@ -7,7 +7,7 @@ type loginFieldType = {
     remember?: string
 }
 type registerFieldType = {
-    username?: string
+    userName?: string
     password?: string
     confirmPassword?: string
     email?: string
@@ -91,7 +91,7 @@ export default function AuthForm() {
                 >
                     <Form.Item<registerFieldType>
                         label="用户名"
-                        name="username"
+                        name="userName"
                         rules={[{ required: true, message: '用户名为空!' }]}
                     >
                         <Input />
