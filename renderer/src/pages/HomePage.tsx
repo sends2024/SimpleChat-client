@@ -1,5 +1,6 @@
 import { useAuthStore } from '@/store'
-import { Button } from 'antd'
+import { Layout, Button, theme, Avatar, Dropdown, message } from 'antd';
+
 
 export default function HomePage() {
     const authStore = useAuthStore()
@@ -8,11 +9,20 @@ export default function HomePage() {
         window.api.authIPC.logout()
     }
     
+    let isDefault = true;
+
     return (
         <>
-            <h1 className="text-pink">{`欢迎回来${authStore.user.username}`}</h1>
-            <h1 className="text-pink">{`你的邮箱${authStore.user.email}`}</h1>
-            <Button onClick={handleLogout}>Logout</Button>
+            <div className="relative w-full h-full">
+                {isDefault ? (
+                    <div className="flex flex-col items-center justify-center h-full text-center">
+                    <h1 className="text-2xl font-bold mb-4">欢迎使用 SimpleChat</h1>
+                    <p className="text-gray-600">请选择频道以开始交流。</p>
+                    </div>
+                ) : (
+                    <div></div>
+                )}
+            </div>
         </>
     )
 }
