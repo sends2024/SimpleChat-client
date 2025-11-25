@@ -18,6 +18,8 @@ declare global {
         }
         env: {
             serviceURL
+            deepseekURL
+            deepseekAPIKEY
         }
     }
 }

@@ -1,8 +1,3 @@
-/**
- * 解析 JWT 并返回 payload
- * @param {string} token JWT 字符串
- * @returns {object|null} payload 对象，解析失败返回 null
- */
 export function parseJWT(token: string) {
     if (!token) return null
 

@@ -8,10 +8,13 @@ const api = {
     authIPC,
     windowIPC
 }
-/* 此处为环境变量 */
+/* 此处为环境变量，详细读取见主进程config */
 const env = {
-    serviceURL: process.env.SERVICE_URL
+    serviceURL: process.env.SERVICE_URL,
+    deepseekURL: process.env.DEEPSEEK_URL,
+    deepseekAPIKEY: process.env.DEEPSEEK_APIKEY
 }
+console.log(env)
 /* 暴露方法给渲染进程 */
 if (process.contextIsolated) {
     try {

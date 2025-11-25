@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron'
 type succeededAuthPayload = {
-    userName: string
+    username: string
     avatarURL: string
     email: string
     password?: string

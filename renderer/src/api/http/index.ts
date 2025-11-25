@@ -48,3 +48,4 @@ export const http = {
 }
 
 export * from './auth'
+export * from './channel'
