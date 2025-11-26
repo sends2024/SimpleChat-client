@@ -1,4 +1,5 @@
 import { StandardResponse } from '@/models'
+import { message } from 'antd'
 import axios, { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 /* 构建HTTP服务示例 */
 export const httpInstance = axios.create({
@@ -21,6 +22,7 @@ httpInstance.interceptors.response.use(
         return res
     },
     (error) => {
+        message.error(error)
         return Promise.reject(new Error(error))
     }
 )
