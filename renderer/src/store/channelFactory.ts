@@ -4,7 +4,7 @@ import {
     createWebSocketService,
     WebSocketService
 } from '@/api'
-import { ChannelSchema, MessageSchema} from '@/models'
+import { ChannelSchema, MessageSchema } from '@/models'
 import { create } from 'zustand'
 
 type ChannelState = {
@@ -12,7 +12,7 @@ type ChannelState = {
     channel: ChannelSchema
     wsInfo: WebSocketService
     history: MessageSchema[]
-    pushNewMsg: (msg: MessageSchema) => void
+    pushNewMsg: (msgs: MessageSchema[]) => void
     disband: () => void
     banMember: (memberID: string) => void
     getInviteCode: () => void
@@ -56,19 +56,17 @@ export const useChannelStoreFactory = (
                 beforeTime
             )
 
-            get().history.push(...res.messages)
+            set((state) => ({
+                history: [...res.messages, ...state.history]
+            }))
             return res.messages
         },
         async getAllUsers() {
             return (await channelRequests.getMembersRequest(get().channel.channelID)).members
         },
-        pushNewMsg(msg: MessageSchema) {
-            const history = get().history
-            history.push(msg)
-            set(() => ({
-                history: {
-                    ...history
-                }
+        pushNewMsg(msgs: MessageSchema[]) {
+            set((state) => ({
+                history: [...state.history, ...msgs]
             }))
         }
     }))
