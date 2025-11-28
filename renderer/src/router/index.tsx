@@ -2,7 +2,15 @@ import { createHashRouter, Navigate } from 'react-router'
 import HomePage from '@/pages/HomePage'
 import AuthPage from '@/pages/AuthPage'
 import { CommonLayout } from '@/pages/CommonLayout'
+import { useChannelsStore } from '@/store/channels'
+import { ChatPage } from '@/pages/ChatPage'
 
+const channels = await useChannelsStore.getState().getAllChannels()
+const dynamicChildren = channels.map((channel) => ({
+    path: channel.channelID,
+    name: `channel_${channel.channelID}`,
+    Component: () => <ChatPage channel={channel} />
+}))
 const route = [
     {
         name: 'index',
@@ -25,7 +33,8 @@ const route = [
             {
                 path: 'home',
                 Component: HomePage
-            }
+            },
+            ...dynamicChildren
         ]
     }
 ]

@@ -38,7 +38,7 @@ export const channelRequests = {
         return await http.post<null>(`/api/channels/${channelID}/leave`, {})
     },
 
-    getChannelsRequest: async () => {
+    getAllChannelsRequest: async () => {
         return await http.get<channelsResponse>('/api/channels/list', {})
     },
 

@@ -8,13 +8,13 @@ export function CommonLayout() {
     return (
         <>
             <Layout className="w-full h-full">
-                <Sider width="25%" className="bg-blue-100"></Sider>
+                <Sider width="30%" className="bg-blue-100"></Sider>
                 <Layout>
                     <Header></Header>
                     <Content>
                         <Outlet></Outlet>
                     </Content>
-                    <Footer className="bg-red"></Footer>
+                    <Footer className="bg-red h-[20%]"></Footer>
                 </Layout>
             </Layout>
         </>
