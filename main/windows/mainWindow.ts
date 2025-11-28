@@ -6,6 +6,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 export function createMainWindow() {
     const win = new BrowserWindow({
         icon: path.join(VITE_PUBLIC, 'icon.ico'),
+        width: 1343 / 1.2,
+        height: 1061 / 1.2,
+        frame: false,
         webPreferences: {
             preload: path.join(__dirname, 'preload.mjs'),
             contextIsolation: true,

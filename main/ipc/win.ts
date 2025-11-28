@@ -5,4 +5,7 @@ export function registerWinHandler() {
     ipcMain.on('win:close', (_event, key: WindowKey) => {
         windowsManager.close(key)
     })
+    ipcMain.on('win:minimize', (_event, key: WindowKey) => {
+        windowsManager.minimize(key)
+    })
 }
