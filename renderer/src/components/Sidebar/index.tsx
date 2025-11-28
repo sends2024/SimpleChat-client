@@ -61,7 +61,6 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onChannelChange, currentUs
             }
 
             try {
-                setLoading(true);
                 const { data } = await channelApi.getUserChannels(currentUserId);
                 console.log(data);
 
@@ -78,8 +77,6 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onChannelChange, currentUs
                 setChannelNames({});
                 setSelectedKey('');
                 messageApi.error('获取频道列表失败');
-            } finally {
-                setLoading(false);
             }
         }
 
@@ -112,6 +109,59 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onChannelChange, currentUs
 
 
     const children = {
+        sidebarHeader: (
+            <div className="p-4 flex items-center justify-center h-16">
+                    {!collapsed ? (
+                        <h1 className="text-xl font-bold">SimpleChat</h1>
+                    ) : (
+                        <div className="text-xl font-bold">SC</div>
+                    )}
+                </div>
+        ),
+
+        addChannel: (
+            <Menu
+                theme="light"
+                mode="inline"
+                selectedKeys={[]}
+                onClick={({ key }) => {
+                    if (key === 'add-channel') handleAddChannel();
+                }}
+                className="border-r-0"
+                items={[
+                    {
+                        key: 'add-channel',
+                        icon: <PlusOutlined />,
+                        label: '添加频道',
+                    },
+                ]}
+            />
+        ),
+
+        channelList: (
+            <div className="channel-list flex-1 h-2/3 min-h-0">
+                <Menu
+                    theme="light"
+                    mode="inline"
+                    selectedKeys={selectedKey ? [selectedKey] : []}
+                    onClick={({ key }) => {
+                        if (key !== 'empty' && key !== 'add-channel') {
+                            handleChannelClick(key);
+                        }
+                    }}
+                    className="border-r-0"
+                    items={[
+                        getItem(
+                            '频道列表',
+                            'channels',
+                            <UnorderedListOutlined />,
+                            channelListItems,
+                        ),
+                    ]}
+                />
+            </div>
+        ),
+
         aboutWe: (
             <div className="border-t shrink-0 mb-7">
                 <Menu
@@ -143,60 +193,17 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onChannelChange, currentUs
                 style={{ background: colorBgContainer }}
                 className="flex flex-col h-full border-r border-gray-200"
             >
-                <div className="p-4 flex items-center justify-center h-16">
-                    {!collapsed ? (
-                        <h1 className="text-xl font-bold">SimpleChat</h1>
-                    ) : (
-                        <div className="text-xl font-bold">SC</div>
-                    )}
-                </div>
 
-                <Menu
-                    theme="light"
-                    mode="inline"
-                    selectedKeys={[]}
-                    onClick={({ key }) => {
-                        if (key === 'add-channel') handleAddChannel();
-                    }}
-                    className="border-r-0"
-                    items={[
-                        {
-                            key: 'add-channel',
-                            icon: <PlusOutlined />,
-                            label: '添加频道',
-                        },
-                    ]}
-                />
-
-                <div className="channel-list flex-1 h-2/3 min-h-0">
-                    <Menu
-                        theme="light"
-                        mode="inline"
-                        selectedKeys={selectedKey ? [selectedKey] : []}
-                        onClick={({ key }) => {
-                            if (key !== 'empty' && key !== 'add-channel') {
-                                handleChannelClick(key);
-                            }
-                        }}
-                        className="border-r-0"
-                        items={[
-                            getItem(
-                                '频道列表',
-                                'channels',
-                                <UnorderedListOutlined />,
-                                channelListItems,
-                            ),
-                        ]}
-                    />
-                </div>
-
+                {children.sidebarHeader}
+                {children.addChannel}
+                {children.channelList}
                 {children.aboutWe}
 
             </Sider>
 
 
             {contextHolder}
-      // channelModal
+            // channelModal
         </>
     );
 };
