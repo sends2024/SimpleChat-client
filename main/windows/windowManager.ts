@@ -46,6 +46,10 @@ class WindowsManager {
         const win = this.windows.get(key)
         if (win && !win.isDestroyed()) win.close()
     }
+    minimize(key: WindowKey): void {
+        const win = this.windows.get(key)
+        if (win && !win.isDestroyed()) win.minimize()
+    }
 
     closeAll(): void {
         for (const win of this.windows.values()) {

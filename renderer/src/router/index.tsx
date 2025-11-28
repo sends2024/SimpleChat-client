@@ -1,8 +1,6 @@
+import { createHashRouter, Navigate } from 'react-router'
 import HomePage from '@/pages/HomePage'
 import AuthPage from '@/pages/AuthPage'
-
-import { createHashRouter, Navigate } from 'react-router'
-import { Children } from 'react'
 import { CommonLayout } from '@/pages/CommonLayout'
 
 const route = [

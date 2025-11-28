@@ -1,115 +1,100 @@
-import React, { useState, useEffect } from 'react';
-import { Layout, Menu, theme, message as antdMessage } from 'antd';
-import type { MenuProps } from 'antd';
-import {
-    PlusOutlined,
-    UnorderedListOutlined,
-    InfoCircleOutlined,
-} from '@ant-design/icons';
-
-
-
-
+import React, { useState, useEffect } from 'react'
+import { Layout, Menu, theme, message as antdMessage } from 'antd'
+import type { MenuProps } from 'antd'
+import { PlusOutlined, UnorderedListOutlined, InfoCircleOutlined } from '@ant-design/icons'
 
 // TODO: 修到一半, 丢着不用管, 让我完工
 
+const { Sider } = Layout
 
-const { Sider } = Layout;
-
-type MenuItem = Required<MenuProps>['items'][number];
+type MenuItem = Required<MenuProps>['items'][number]
 
 function getItem(
     label: React.ReactNode,
     key: React.Key,
     icon?: React.ReactNode,
-    children?: MenuItem[],
+    children?: MenuItem[]
 ): MenuItem {
     return {
         key,
         icon,
         children,
-        label,
-    } as MenuItem;
+        label
+    } as MenuItem
 }
 
 interface SidebarProps {
-    collapsed: boolean;
-    onChannelChange?: (channel: { channelId: string; channelName: string }) => void;
-    currentUserId: string | null;
+    collapsed: boolean
+    onChannelChange?: (channel: { channelId: string; channelName: string }) => void
+    currentUserId: string | null
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ collapsed, onChannelChange, currentUserId }) => {
-
-
+export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
     const {
-        token: { colorBgContainer },
-    } = theme.useToken(); // Focus 更变时可以用
+        token: { colorBgContainer }
+    } = theme.useToken() // Focus 更变时可以用
 
-    const [messageApi, contextHolder] = antdMessage.useMessage();
+    const [messageApi, contextHolder] = antdMessage.useMessage()
 
-    const [channels, setChannels] = useState<string[]>([]);
-    const [channelNames, setChannelNames] = useState<{ [key: string]: string }>({});
-    const [selectedKey, setSelectedKey] = useState<string>('');
+    const [channels, setChannels] = useState<string[]>([])
+    const [channelNames, setChannelNames] = useState<{ [key: string]: string }>({})
+    const [selectedKey, setSelectedKey] = useState<string>('')
 
     useEffect(() => {
         async function fetchChannels() {
             if (!currentUserId) {
-                setChannels([]);
-                setChannelNames({});
-                setSelectedKey('');
-                return;
+                setChannels([])
+                setChannelNames({})
+                setSelectedKey('')
+                return
             }
 
             try {
-                setLoading(true);
-                const { data } = await channelApi.getUserChannels(currentUserId);
-                console.log(data);
+                setLoading(true)
+                const { data } = await channelApi.getUserChannels(currentUserId)
+                console.log(data)
 
-                setChannels(data.map((ch) => ch.channelId));
+                setChannels(data.map((ch) => ch.channelId))
 
-                const map: { [key: string]: string } = {};
-                data.forEach((ch) => (map[ch.channelId] = ch.channelName));
-                setChannelNames(map);
+                const map: { [key: string]: string } = {}
+                data.forEach((ch) => (map[ch.channelId] = ch.channelName))
+                setChannelNames(map)
 
-                setSelectedKey('');
+                setSelectedKey('')
             } catch (error) {
-                console.error('获取频道列表失败:', error);
-                setChannels([]);
-                setChannelNames({});
-                setSelectedKey('');
-                messageApi.error('获取频道列表失败');
+                console.error('获取频道列表失败:', error)
+                setChannels([])
+                setChannelNames({})
+                setSelectedKey('')
+                messageApi.error('获取频道列表失败')
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
         }
 
-        fetchChannels();
-    }, [currentUserId]);
+        fetchChannels()
+    }, [currentUserId])
 
     const handleAddChannel = () => {
         if (!currentUserId) {
-            messageApi.error('请先登录以添加频道');
-            return;
+            messageApi.error('请先登录以添加频道')
+            return
         }
-        setIsModalOpen(true);
-    };
-
+        setIsModalOpen(true)
+    }
 
     const handleChannelClick = (key: string) => {
-        setSelectedKey(key);
+        setSelectedKey(key)
         onChannelChange?.({
             channelId: key,
             channelName: channelNames[key]
-        });
-    };
+        })
+    }
 
     const channelListItems: MenuItem[] =
         channels.length > 0
-            ? channels.map((channelId) =>
-                getItem(channelNames[channelId] ?? '未知频道', channelId),
-            )
-            : [getItem('未加入任何频道', 'empty')];
-
+            ? channels.map((channelId) => getItem(channelNames[channelId] ?? '未知频道', channelId))
+            : [getItem('未加入任何频道', 'empty')]
 
     const children = {
         aboutWe: (
@@ -118,20 +103,21 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onChannelChange, currentUs
                     theme="light"
                     mode="inline"
                     selectedKeys={[]}
-                    onClick={({ key }) => { if (key === '3') console.log('点击关于我们'); }}
+                    onClick={({ key }) => {
+                        if (key === '3') console.log('点击关于我们')
+                    }}
                     className="border-r-0"
                     items={[
                         {
                             key: '3',
                             icon: <InfoCircleOutlined />,
-                            label: '关于我们',
-                        },
+                            label: '关于我们'
+                        }
                     ]}
                 />
             </div>
         )
     }
-
 
     return (
         <>
@@ -156,15 +142,15 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onChannelChange, currentUs
                     mode="inline"
                     selectedKeys={[]}
                     onClick={({ key }) => {
-                        if (key === 'add-channel') handleAddChannel();
+                        if (key === 'add-channel') handleAddChannel()
                     }}
                     className="border-r-0"
                     items={[
                         {
                             key: 'add-channel',
                             icon: <PlusOutlined />,
-                            label: '添加频道',
-                        },
+                            label: '添加频道'
+                        }
                     ]}
                 />
 
@@ -175,7 +161,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onChannelChange, currentUs
                         selectedKeys={selectedKey ? [selectedKey] : []}
                         onClick={({ key }) => {
                             if (key !== 'empty' && key !== 'add-channel') {
-                                handleChannelClick(key);
+                                handleChannelClick(key)
                             }
                         }}
                         className="border-r-0"
@@ -184,21 +170,16 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onChannelChange, currentUs
                                 '频道列表',
                                 'channels',
                                 <UnorderedListOutlined />,
-                                channelListItems,
-                            ),
+                                channelListItems
+                            )
                         ]}
                     />
                 </div>
 
                 {children.aboutWe}
-
             </Sider>
-
-
             {contextHolder}
-      // channelModal
+            // channelModal
         </>
-    );
-};
-
-export default Sidebar;
+    )
+}
