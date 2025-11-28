@@ -1,16 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Modal, Input, message as antdMessage } from 'antd'
 
 interface channelModalProps {
-    authToken: string
-    newChannelName: string
+    modalState: boolean
+    setModalState?: (open: boolean) => void
+    authToken: string | null
 }
 
-export default function ChannelModal({ authToken }: channelModalProps) {
+export default function ChannelModal({ authToken, modalState, setModalState }: channelModalProps) {
     const [messageApi, contextHolder] = antdMessage.useMessage()
 
     // Modal 状态管理
-    const [modalState, setModalState] = useState(false)
+
     const [loadingState, setLoadingState] = useState(false)
     const [newChannelName, setNewChannelName] = useState('')
 
@@ -49,8 +50,13 @@ export default function ChannelModal({ authToken }: channelModalProps) {
         }
     }
 
+    const setOpen = (value: boolean) => {
+        modalState = value;
+        setModalState?.(value);
+    };
+
     const handleCancel = () => {
-        setModalState(false)
+        setOpen(false)
         setNewChannelName('')
     }
 

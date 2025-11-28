@@ -3,6 +3,7 @@ import { Layout, Menu, theme, message as antdMessage } from 'antd'
 import type { MenuProps } from 'antd'
 import { PlusOutlined, UnorderedListOutlined, InfoCircleOutlined } from '@ant-design/icons'
 
+import ChannelModal from './ChannelModal'
 // TODO: 修到一半, 丢着不用管, 让我完工
 
 const { Sider } = Layout
@@ -26,10 +27,10 @@ function getItem(
 interface SidebarProps {
     collapsed: boolean
     onChannelChange?: (channel: { channelId: string; channelName: string }) => void
-    currentUserId: string | null
+    authToken: string | null
 }
 
-export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
+export default function Sidebar({ collapsed, onChannelChange, authToken }: SidebarProps) {
     const {
         token: { colorBgContainer }
     } = theme.useToken() // Focus 更变时可以用
@@ -40,9 +41,11 @@ export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
     const [channelNames, setChannelNames] = useState<{ [key: string]: string }>({})
     const [selectedKey, setSelectedKey] = useState<string>('')
 
+    const [modalState, setModalState] = useState(false)
+    
     useEffect(() => {
         async function fetchChannels() {
-            if (!currentUserId) {
+            if (!authToken) {
                 setChannels([])
                 setChannelNames({})
                 setSelectedKey('')
@@ -50,8 +53,8 @@ export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
             }
 
             try {
-                setLoading(true);
-                const { data } = await channelApi.getUserChannels(currentUserId);
+                // TODO: 调用获取所有频道的Api
+                const { data } = await channelApi.getUserChannels(authToken); // 获取所有频道
                 console.log(data);
 
                 setChannels(data.map((ch) => ch.channelId))
@@ -67,20 +70,18 @@ export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
                 setChannelNames({});
                 setSelectedKey('');
                 messageApi.error('获取频道列表失败');
-            } finally {
-                setLoading(false);
             }
         }
 
         fetchChannels()
-    }, [currentUserId])
+    }, [authToken])
 
     const handleAddChannel = () => {
-        if (!currentUserId) {
+        if (!authToken) {
             messageApi.error('请先登录以添加频道')
             return
         }
-        setIsModalOpen(true)
+        setModalState(true)
     }
 
     const handleChannelClick = (key: string) => {
@@ -232,7 +233,12 @@ export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
                 {children.aboutWe}
             </Sider>
             {contextHolder}
-            // channelModal
+            {/* channelModal */}
+            <ChannelModal
+                authToken = {authToken}
+                modalState = {modalState}
+                setModalState = {setModalState}
+            />
         </>
     )
 }

@@ -97,8 +97,8 @@ type wsInfo = {
     uid: string
     cid: string
     token: string
-    userName: string
+    username: string
 }
 export const createWebSocketService = (wsInfo: wsInfo) => {
-    return new WebSocketService(wsInfo.uid, wsInfo.cid, wsInfo.token, wsInfo.userName)
+    return new WebSocketService(wsInfo.uid, wsInfo.cid, wsInfo.token, wsInfo.username)
 }
