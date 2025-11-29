@@ -19,6 +19,7 @@ export function useThrottle(fn: (...args: any[]) => any, delay = 300) {
         return
     }
 }
+
 export function useDebounceInOneArray<T>(fn: (args: T[]) => any, delay = 300) {
     let timer: ReturnType<typeof setTimeout> | null = null
     let array: T[] = []

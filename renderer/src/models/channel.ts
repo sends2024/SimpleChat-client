@@ -8,3 +8,9 @@ export type MessageSchema = {
     content: string
     sent_at: string
 }
+
+export type UsersInfoSchema = {
+    user_id: string
+    username: string
+    avatar_url: string
+}

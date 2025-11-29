@@ -3,6 +3,7 @@ import { Layout, Menu, theme, message as antdMessage } from 'antd'
 import type { MenuProps } from 'antd'
 import { PlusOutlined, UnorderedListOutlined, InfoCircleOutlined } from '@ant-design/icons'
 
+import ChannelModal from './ChannelModal'
 // TODO: 修到一半, 丢着不用管, 让我完工
 
 const { Sider } = Layout
@@ -26,10 +27,10 @@ function getItem(
 interface SidebarProps {
     collapsed: boolean
     onChannelChange?: (channel: { channelId: string; channelName: string }) => void
-    currentUserId: string | null
+    authToken: string | null
 }
 
-export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
+export default function Sidebar({ collapsed, onChannelChange, authToken }: SidebarProps) {
     const {
         token: { colorBgContainer }
     } = theme.useToken() // Focus 更变时可以用
@@ -40,9 +41,11 @@ export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
     const [channelNames, setChannelNames] = useState<{ [key: string]: string }>({})
     const [selectedKey, setSelectedKey] = useState<string>('')
 
+    const [modalState, setModalState] = useState(false)
+    
     useEffect(() => {
         async function fetchChannels() {
-            if (!currentUserId) {
+            if (!authToken) {
                 setChannels([])
                 setChannelNames({})
                 setSelectedKey('')
@@ -50,9 +53,9 @@ export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
             }
 
             try {
-                setLoading(true)
-                const { data } = await channelApi.getUserChannels(currentUserId)
-                console.log(data)
+                // TODO: 调用获取所有频道的Api
+                const { data } = await channelApi.getUserChannels(authToken); // 获取所有频道
+                console.log(data);
 
                 setChannels(data.map((ch) => ch.channelId))
 
@@ -62,25 +65,23 @@ export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
 
                 setSelectedKey('')
             } catch (error) {
-                console.error('获取频道列表失败:', error)
-                setChannels([])
-                setChannelNames({})
-                setSelectedKey('')
-                messageApi.error('获取频道列表失败')
-            } finally {
-                setLoading(false)
+                console.error('获取频道列表失败:', error);
+                setChannels([]);
+                setChannelNames({});
+                setSelectedKey('');
+                messageApi.error('获取频道列表失败');
             }
         }
 
         fetchChannels()
-    }, [currentUserId])
+    }, [authToken])
 
     const handleAddChannel = () => {
-        if (!currentUserId) {
+        if (!authToken) {
             messageApi.error('请先登录以添加频道')
             return
         }
-        setIsModalOpen(true)
+        setModalState(true)
     }
 
     const handleChannelClick = (key: string) => {
@@ -97,6 +98,59 @@ export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
             : [getItem('未加入任何频道', 'empty')]
 
     const children = {
+        sidebarHeader: (
+            <div className="p-4 flex items-center justify-center h-16">
+                    {!collapsed ? (
+                        <h1 className="text-xl font-bold">SimpleChat</h1>
+                    ) : (
+                        <div className="text-xl font-bold">SC</div>
+                    )}
+                </div>
+        ),
+
+        addChannel: (
+            <Menu
+                theme="light"
+                mode="inline"
+                selectedKeys={[]}
+                onClick={({ key }) => {
+                    if (key === 'add-channel') handleAddChannel();
+                }}
+                className="border-r-0"
+                items={[
+                    {
+                        key: 'add-channel',
+                        icon: <PlusOutlined />,
+                        label: '添加频道',
+                    },
+                ]}
+            />
+        ),
+
+        channelList: (
+            <div className="channel-list flex-1 h-2/3 min-h-0">
+                <Menu
+                    theme="light"
+                    mode="inline"
+                    selectedKeys={selectedKey ? [selectedKey] : []}
+                    onClick={({ key }) => {
+                        if (key !== 'empty' && key !== 'add-channel') {
+                            handleChannelClick(key);
+                        }
+                    }}
+                    className="border-r-0"
+                    items={[
+                        getItem(
+                            '频道列表',
+                            'channels',
+                            <UnorderedListOutlined />,
+                            channelListItems,
+                        ),
+                    ]}
+                />
+            </div>
+        ),
+
         aboutWe: (
             <div className="border-t shrink-0 mb-7">
                 <Menu
@@ -142,15 +196,15 @@ export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
                     mode="inline"
                     selectedKeys={[]}
                     onClick={({ key }) => {
-                        if (key === 'add-channel') handleAddChannel()
+                        if (key === 'add-channel') handleAddChannel();
                     }}
                     className="border-r-0"
                     items={[
                         {
                             key: 'add-channel',
                             icon: <PlusOutlined />,
-                            label: '添加频道'
-                        }
+                            label: '添加频道',
+                        },
                     ]}
                 />
 
@@ -161,7 +215,7 @@ export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
                         selectedKeys={selectedKey ? [selectedKey] : []}
                         onClick={({ key }) => {
                             if (key !== 'empty' && key !== 'add-channel') {
-                                handleChannelClick(key)
+                                handleChannelClick(key);
                             }
                         }}
                         className="border-r-0"
@@ -170,8 +224,8 @@ export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
                                 '频道列表',
                                 'channels',
                                 <UnorderedListOutlined />,
-                                channelListItems
-                            )
+                                channelListItems,
+                            ),
                         ]}
                     />
                 </div>
@@ -179,7 +233,12 @@ export default function Sidebar({ collapsed, onChannelChange, currentUserId }) {
                 {children.aboutWe}
             </Sider>
             {contextHolder}
-            // channelModal
+            {/* channelModal */}
+            <ChannelModal
+                authToken = {authToken}
+                modalState = {modalState}
+                setModalState = {setModalState}
+            />
         </>
     )
 }

@@ -4,7 +4,7 @@ import {
     createWebSocketService,
     WebSocketService
 } from '@/api'
-import { ChannelSchema, MessageSchema } from '@/models'
+import { ChannelSchema, MessageSchema, UsersInfoSchema } from '@/models'
 import { create } from 'zustand'
 
 type ChannelState = {
@@ -12,6 +12,7 @@ type ChannelState = {
     channel: ChannelSchema
     wsInfo: WebSocketService
     history: MessageSchema[]
+    usersInfo: UsersInfoSchema[]
     pushNewMsg: (msgs: MessageSchema[]) => void
     disband: () => void
     banMember: (memberID: string) => void
@@ -22,7 +23,7 @@ type ChannelState = {
 }
 export const useChannelStoreFactory = (
     id: string,
-    wsInfo: { uid: string; cid: string; token: string; userName: string },
+    wsInfo: { uid: string; cid: string; token: string; username: string },
     channelInfo: ChannelSchema
 ) => {
     return create<ChannelState>((set, get) => ({
@@ -30,6 +31,7 @@ export const useChannelStoreFactory = (
         channel: channelInfo,
         wsInfo: createWebSocketService(wsInfo),
         history: [],
+        usersInfo: [],
         async disband() {
             if (channelInfo.isOwner) {
                 await AdminChannelRequest.deleteChannelRequest(get().channel.channelID)
@@ -62,7 +64,13 @@ export const useChannelStoreFactory = (
             return res.messages
         },
         async getAllUsers() {
-            return (await channelRequests.getMembersRequest(get().channel.channelID)).members
+            const res = await channelRequests.getMembersRequest(get().channel.channelID)
+
+            set(() => ({
+                usersInfo: res.members
+            }))
+
+            return res.members
         },
         pushNewMsg(msgs: MessageSchema[]) {
             set((state) => ({
