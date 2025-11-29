@@ -26,6 +26,7 @@ export default function ChatSide({
 
     const [connectionStatus, setConnectionStatus] = useState<'disconnected' | 'connected'>('disconnected');
     const [message, setMessage] = useState('');
+    const [beforeTime, setBeforeTime] = useState('')
 
     const isDefault = !channelID;
 
@@ -56,7 +57,8 @@ export default function ChatSide({
             try {
                 // 初始化
                 channelStoreFactory(state => state.getAllUsers())
-                channelStoreFactory(state => state.getHistory())
+                channelStoreFactory(state => state.getHistory(beforeTime))
+                setBeforeTime('before time') // --> 到时候获取到beforeTime 直接传进去就行
 
                 channelStoreFactory(state => state.wsInfo) // 连接 ws
                 setConnectionStatus('connected');
