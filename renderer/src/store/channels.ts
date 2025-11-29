@@ -8,14 +8,17 @@ type ChannelsStore = {
 export const useChannelsStore = create<ChannelsStore>((set, get) => ({
     channels: [] as ChannelSchema[],
     async getAllChannels() {
-        const res = await channelRequests.getAllChannelsRequest()
+        if (localStorage.getItem('authToken')) {
+            const res = await channelRequests.getAllChannelsRequest()
 
-        const channels = res.channels.map((channel) => ({
-            channelID: channel.channel_id,
-            channelName: channel.channel_name,
-            isOwner: channel.is_owner
-        }))
-        set({ channels })
-        return channels
+            const channels = res.channels.map((channel) => ({
+                channelID: channel.channel_id,
+                channelName: channel.channel_name,
+                isOwner: channel.is_owner
+            }))
+            set({ channels })
+            return channels
+        }
+        return []
     }
 }))
