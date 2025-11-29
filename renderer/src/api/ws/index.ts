@@ -47,12 +47,12 @@ export class WebSocketService {
         }
 
         this.ws.onclose = () => {
-            console.log('WebSocket closed')
+            // console.log('WebSocket closed')
 
             this.stopHeartbeat()
 
             if (!this.isManualClose) {
-                console.log('尝试重连中...')
+                // console.log('尝试重连中...')
                 this.reconnect()
             }
         }

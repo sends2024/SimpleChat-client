@@ -5,6 +5,7 @@ import { PlusOutlined, UnorderedListOutlined, InfoCircleOutlined, RobotOutlined 
 
 import ChannelModal from '../ModalComp/ChannelModal'
 import { useChannelsStore } from '@/store/channels'
+import { log } from 'console'
 
 const { Sider } = Layout
 
@@ -106,13 +107,15 @@ export default function Sidebar({ collapsed }: SidebarProps) {
 
 
     const handleChannelClick = (key: string) => {
+        console.log(key, channelNames[key]);
+        
         setSelectedKey(key)
         channelStore.setCurrentChannel(key, channelNames[key], channels.find(ch => ch.channelID === key)?.isOwner || false)
     }
 
     const channelListItems: MenuItem[] =
         channels.length > 0
-            ? channels.map((channels) => getItem(channelNames[channels.channelID] ?? '未知频道', channels.channelName))
+            ? channels.map((channels) => getItem(channelNames[channels.channelID] ?? '未知频道', channels.channelID))
             : [getItem('未加入任何频道', 'empty')]
 
     const children = {
