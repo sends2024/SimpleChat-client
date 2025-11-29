@@ -5,6 +5,7 @@ import { streamParser } from '@/utils/streamParser'
 interface DsState {
     api: LLMService
     history: MsgRequest[]
+    chat: (content: string, stream?: boolean, onMessage?: any, onFinish?: any) => any
 }
 
 export const useDsStore = create<DsState>((set, get) => ({
@@ -22,6 +23,7 @@ export const useDsStore = create<DsState>((set, get) => ({
         reqMsgs.push(newMsg)
         try {
             const res = await get().api.chat(reqMsgs)
+            console.log(res)
             if (!stream) {
                 set((state) => ({
                     history: [...state.history, newMsg, res.choices[0].message.content]

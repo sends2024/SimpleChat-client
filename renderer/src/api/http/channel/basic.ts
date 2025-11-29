@@ -35,19 +35,19 @@ export const channelRequests = {
     },
 
     leaveChannelRequest: async (channelID: string) => {
-        return await http.post<null>(`/api/channels/${channelID}/leave`, {})
+        return await http.post<null>(`/channels/${channelID}/leave`, {})
     },
 
     getAllChannelsRequest: async () => {
-        return await http.get<channelsResponse>('/api/channels/list', {})
+        return await http.get<channelsResponse>('/channels/list', {})
     },
 
     getMembersRequest: async (channelID: string) => {
-        return await http.get<membersResponse>(`/api/channels/${channelID}/members`, {})
+        return await http.get<membersResponse>(`/channels/${channelID}/members`, {})
     },
 
     getMessagesRequest: async (channelID: string, beforeTime: string) => {
-        return await http.get<messagesResponse>(`/api/channels/${channelID}/history`, {
+        return await http.get<messagesResponse>(`/channels/${channelID}/history`, {
             params: {
                 before: beforeTime
             }

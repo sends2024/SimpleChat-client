@@ -9,7 +9,7 @@ export class LLMService {
         this.key = key
         this.model = model
     }
-    async chat(msgs: Array<MsgRequest>, stream: boolean = true) {
+    async chat(msgs: Array<MsgRequest>, stream: boolean = false) {
         try {
             const res = await fetch(this.url, {
                 method: 'POST',
@@ -24,7 +24,10 @@ export class LLMService {
                 })
             })
             //非流式可直接使用
-            if (!stream) return await res.json()
+            if (!stream) {
+                console.log(res)
+                return await res.json()
+            }
             //解析
             return res
         } catch (error) {

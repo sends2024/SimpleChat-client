@@ -6,5 +6,11 @@ export const windowIPC = {
     },
     minimize: (key: string) => {
         ipcRenderer.send('win:minimize', key)
+    },
+    open: (key: string) => {
+        ipcRenderer.send('win:open', key)
+    },
+    exit: () => {
+        ipcRenderer.send('win:exit')
     }
 }

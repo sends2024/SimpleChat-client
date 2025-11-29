@@ -6,15 +6,18 @@ export function Header() {
         <>
             {/* 感觉加不加gap都无所谓 */}
             <div className="btn-group flex justify-end pb-1 bg-gray-200  h-8">
-                <Button icon={<QuestionOutlined style={{ fontSize: 15 }}
-                />} type="text"></Button>
+                <Button
+                    onClick={() => window.api.windowIPC.open('llm')}
+                    icon={<QuestionOutlined style={{ fontSize: 15 }} />}
+                    type="text"
+                ></Button>
                 <Button
                     onClick={() => window.api.windowIPC.minimize('main')}
                     icon={<MinusOutlined style={{ fontSize: 15 }} />}
                     type="text"
                 ></Button>
                 <Button
-                    onClick={() => window.api.windowIPC.close('main')}
+                    onClick={() => window.api.windowIPC.exit()}
                     icon={<CloseOutlined style={{ fontSize: 15 }} />}
                     type="text"
                 ></Button>

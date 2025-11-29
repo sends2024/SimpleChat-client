@@ -1,8 +1,9 @@
 import { BrowserWindow } from 'electron'
 import { createMainWindow } from './mainWindow'
 import { createAuthWindow } from './authWindow'
+import { createLLMWindow } from './llmChatWindow'
 
-export type WindowKey = 'main' | 'auth'
+export type WindowKey = 'main' | 'auth' | 'llm'
 
 export interface WindowCreator {
     key: WindowKey
@@ -10,7 +11,8 @@ export interface WindowCreator {
 }
 const windowCreators: Record<WindowKey, () => BrowserWindow> = {
     main: createMainWindow,
-    auth: createAuthWindow
+    auth: createAuthWindow,
+    llm: createLLMWindow
 }
 class WindowsManager {
     private windows = new Map<WindowKey, BrowserWindow>()
