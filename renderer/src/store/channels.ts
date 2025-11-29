@@ -1,12 +1,24 @@
 import { channelRequests } from '@/api'
-import { ChannelSchema } from '@/models'
+import type { ChannelSchema } from '@/models'
 import { create } from 'zustand'
 type ChannelsStore = {
     channels: ChannelSchema[]
+    currentChannel ?: ChannelSchema | null
+    setCurrentChannel: (channelID: string, channelName: string, isOwner: boolean) => Promise<void>
     getAllChannels: () => Promise<ChannelSchema[]>
 }
 export const useChannelsStore = create<ChannelsStore>((set, get) => ({
     channels: [] as ChannelSchema[],
+    currentChannel: null,
+    async setCurrentChannel(channelID: string, channelName: string, isOwner: boolean) {
+        const newChannel: ChannelSchema = {
+            channelID,
+            channelName,
+            isOwner
+        }
+        
+        set({ currentChannel: newChannel })
+    },
     async getAllChannels() {
         if (localStorage.getItem('authToken')) {
             const res = await channelRequests.getAllChannelsRequest()

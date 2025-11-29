@@ -3,26 +3,28 @@ import { Button, message as antdMessage } from 'antd';
 
 import { parseJWT } from '@/utils'
 import { useChannelStoreFactory } from '@/store'
-import { ChannelSchema, UserSchema } from '@/models'
+import { useChannelsStore } from '@/store/channels';
+import { ChannelSchema, UserSchema, MessageSchema } from '@/models'
 import MessageBubble from '../ChatPage/MessageBubble';
 
 
 interface ChatPageProps {
     authToken: string
     userInfo: UserSchema
-    channelInfo: ChannelSchema
 }
 
 export default function ChatSide({
     authToken,
     userInfo,
-    channelInfo
 }: ChatPageProps) {
     const DEFAULT_USERNAME = '用户';
 
+    const channelStore = useChannelsStore()
+    const currentChannel = channelStore.currentChannel
+
     const currentUserId = parseJWT(authToken).user_id
     const { username } = userInfo
-    const { channelID, channelName } = channelInfo;
+    const { channelID, channelName } = currentChannel || { channelID: '', channelName: 'Simple Chat' };
 
     const [connectionStatus, setConnectionStatus] = useState<'disconnected' | 'connected'>('disconnected');
     const [message, setMessage] = useState('');
@@ -38,11 +40,11 @@ export default function ChatSide({
             token: authToken,
             username: username
         },
-        channelInfo,
-    )
+        currentChannel as ChannelSchema,
+    )()
 
-    const history = channelStoreFactory(state => state.history)
-    const usersInfo = channelStoreFactory(state => state.usersInfo)
+    const history = channelStoreFactory.history
+    const usersInfo = channelStoreFactory.usersInfo
 
 
     useEffect(() => {
@@ -56,11 +58,14 @@ export default function ChatSide({
 
             try {
                 // 初始化
-                channelStoreFactory(state => state.getAllUsers())
-                channelStoreFactory(state => state.getHistory(beforeTime))
+                channelStoreFactory.getAllUsers();
+                channelStoreFactory.getHistory(beforeTime)
                 setBeforeTime('before time') // --> 到时候获取到beforeTime 直接传进去就行
 
-                channelStoreFactory(state => state.wsInfo) // 连接 ws
+                if (!channelID) {
+                    console.log("成功连接ws");
+                    
+                }
                 setConnectionStatus('connected');
 
             } catch (error) {
@@ -73,11 +78,11 @@ export default function ChatSide({
         if (channelID) {
             loadChannel();
         } else {
-            channelStoreFactory(state => state.wsInfo.close)
+            channelStoreFactory.wsInfo.close()
         }
 
         return () => {
-            channelStoreFactory(state => state.wsInfo.close)
+            channelStoreFactory.wsInfo.close()
         };
     }, [channelID, authToken]);
 
@@ -87,6 +92,16 @@ export default function ChatSide({
             antdMessage.warning('消息不能为空');
             return;
         }
+        const messageData : MessageSchema = {
+            sender_id: currentUserId,
+            content: message,
+            sent_at: new Date().toISOString(),
+        }
+
+        channelStoreFactory.wsInfo.send(messageData);
+        channelStoreFactory.pushNewMsg([messageData]);
+
+        setMessage('');
     }
 
     const parseUsersMap = useMemo(() => {

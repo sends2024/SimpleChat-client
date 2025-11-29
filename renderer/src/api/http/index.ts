@@ -10,7 +10,7 @@ export const httpInstance = axios.create({
 httpInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('authToken')
     if (token) {
-        config.headers.Authorization = token
+        config.headers.Authorization = 'Bearer ' + token
     }
     return config
 })

@@ -18,6 +18,7 @@ declare global {
         }
         env: {
             serviceURL
+            wsServiceURL
             deepseekURL
             deepseekAPIKEY
         }

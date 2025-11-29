@@ -29,7 +29,7 @@ type messagesResponse = {
 
 export const channelRequests = {
     joinChannelRequest: async (payload: joinChannelPayload) => {
-        return await http.post<null>('/users/login', {
+        return await http.post<null>('/channels/join', {
             invite_code: payload.invite_code
         })
     },

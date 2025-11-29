@@ -11,6 +11,7 @@ const api = {
 /* 此处为环境变量，详细读取见主进程config */
 const env = {
     serviceURL: process.env.SERVICE_URL,
+    wsServiceURL: process.env.WS_SERVICE_URL,
     deepseekURL: process.env.DEEPSEEK_URL,
     deepseekAPIKEY: process.env.DEEPSEEK_APIKEY
 }

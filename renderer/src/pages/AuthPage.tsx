@@ -12,7 +12,7 @@ export default function LoginPage() {
                         icon={<PoweroffOutlined style={{ fontSize: 20 }} />}
                     ></Button>
                 </div>
-                <div className="title  p-5">
+                <div className="title p-5">
                     <span className="font-bold text-5">欢迎使用 SimpleChat</span>
                 </div>
 

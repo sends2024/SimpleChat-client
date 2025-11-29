@@ -7,7 +7,7 @@ import { ChatPage } from '@/pages/ChatPage'
 import { LLMChatPage } from '@/pages/LLMChatPage'
 import { ChannelSchema } from '@/models'
 
- const channels = /* (await useChannelsStore.getState().getAllChannels()) ||  */[] as ChannelSchema[]
+const channels = /* (await useChannelsStore.getState().getAllChannels()) ||  */[] as ChannelSchema[]
 const dynamicChildren = channels.map((channel) => ({
     path: channel.channelID,
     name: `channel_${channel.channelID}`,

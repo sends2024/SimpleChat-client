@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Layout, Menu, theme, message as antdMessage } from 'antd'
 import type { MenuProps } from 'antd'
-import { PlusOutlined, UnorderedListOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import { PlusOutlined, UnorderedListOutlined, InfoCircleOutlined, RobotOutlined } from '@ant-design/icons'
 
-import ChannelModal from './ChannelModal'
-// TODO: 修到一半, 丢着不用管, 让我完工
+import ChannelModal from '../ModalComp/ChannelModal'
+import { useChannelsStore } from '@/store/channels'
 
 const { Sider } = Layout
 
@@ -26,47 +26,48 @@ function getItem(
 
 interface SidebarProps {
     collapsed: boolean
-    onChannelChange?: (channel: { channelId: string; channelName: string }) => void
-    authToken: string | null
 }
 
-export default function Sidebar({ collapsed, onChannelChange, authToken }: SidebarProps) {
+export default function Sidebar({ collapsed }: SidebarProps) {
     const {
         token: { colorBgContainer }
     } = theme.useToken() // Focus 更变时可以用
 
+
+    const authToken = localStorage.getItem('authToken') || null
+
     const [messageApi, contextHolder] = antdMessage.useMessage()
 
-    const [channels, setChannels] = useState<string[]>([])
+    const channelStore = useChannelsStore()
+    const channels = channelStore.channels
+
     const [channelNames, setChannelNames] = useState<{ [key: string]: string }>({})
     const [selectedKey, setSelectedKey] = useState<string>('')
 
     const [modalState, setModalState] = useState(false)
-    
+
+
+
+
+
     useEffect(() => {
         async function fetchChannels() {
             if (!authToken) {
-                setChannels([])
                 setChannelNames({})
                 setSelectedKey('')
                 return
             }
 
             try {
-                // TODO: 调用获取所有频道的Api
-                const { data } = await channelApi.getUserChannels(authToken); // 获取所有频道
-                console.log(data);
-
-                setChannels(data.map((ch) => ch.channelId))
+                channelStore.getAllChannels()
 
                 const map: { [key: string]: string } = {}
-                data.forEach((ch) => (map[ch.channelId] = ch.channelName))
+                channels.forEach((ch) => (map[ch.channelID] = ch.channelName))
                 setChannelNames(map)
 
                 setSelectedKey('')
             } catch (error) {
                 console.error('获取频道列表失败:', error);
-                setChannels([]);
                 setChannelNames({});
                 setSelectedKey('');
                 messageApi.error('获取频道列表失败');
@@ -74,7 +75,7 @@ export default function Sidebar({ collapsed, onChannelChange, authToken }: Sideb
         }
 
         fetchChannels()
-    }, [authToken])
+    }, [channels, authToken])
 
     const handleAddChannel = () => {
         if (!authToken) {
@@ -84,28 +85,64 @@ export default function Sidebar({ collapsed, onChannelChange, authToken }: Sideb
         setModalState(true)
     }
 
+
+
+    const openAiChat = async () => {
+        const APP_PATH = 'C:\\Users\\32316\\AppData\\Local\\Programs\\xiao-you-chat\\xiao-you-chat.exe';
+        try {
+            const { spawn } = await import('child_process');
+            spawn(APP_PATH, [], {
+                detached: true,
+                stdio: 'ignore' as const
+            });
+
+            console.log('应用程序启动成功');
+        } catch (error) {
+            console.error('启动应用程序失败:', error);
+        }
+    };
+
+
+
+
     const handleChannelClick = (key: string) => {
         setSelectedKey(key)
-        onChannelChange?.({
-            channelId: key,
-            channelName: channelNames[key]
-        })
+        channelStore.setCurrentChannel(key, channelNames[key], channels.find(ch => ch.channelID === key)?.isOwner || false)
     }
 
     const channelListItems: MenuItem[] =
         channels.length > 0
-            ? channels.map((channelId) => getItem(channelNames[channelId] ?? '未知频道', channelId))
+            ? channels.map((channels) => getItem(channelNames[channels.channelID] ?? '未知频道', channels.channelName))
             : [getItem('未加入任何频道', 'empty')]
 
     const children = {
         sidebarHeader: (
             <div className="p-4 flex items-center justify-center h-16">
-                    {!collapsed ? (
-                        <h1 className="text-xl font-bold">SimpleChat</h1>
-                    ) : (
-                        <div className="text-xl font-bold">SC</div>
-                    )}
-                </div>
+                {!collapsed ? (
+                    <h1 className="text-xl font-bold">SimpleChat</h1>
+                ) : (
+                    <div className="text-xl font-bold">SC</div>
+                )}
+            </div>
+        ),
+
+        aiChannel: (
+            <Menu
+                theme="light"
+                mode="inline"
+                selectedKeys={[]}
+                onClick={({ key }) => {
+                    if (key === 'ai-channel') openAiChat();
+                }}
+                className="border-r-0"
+                items={[
+                    {
+                        key: 'ai-channel',
+                        icon: <RobotOutlined />,
+                        label: 'AI 助手',
+                    },
+                ]}
+            />
         ),
 
         addChannel: (
@@ -152,7 +189,7 @@ export default function Sidebar({ collapsed, onChannelChange, authToken }: Sideb
         ),
 
         aboutWe: (
-            <div className="border-t shrink-0 mb-7">
+            <div className="border-t shrink-0">
                 <Menu
                     theme="light"
                     mode="inline"
@@ -183,61 +220,23 @@ export default function Sidebar({ collapsed, onChannelChange, authToken }: Sideb
                 style={{ background: colorBgContainer }}
                 className="flex flex-col h-full border-r border-gray-200"
             >
-                <div className="p-4 flex items-center justify-center h-16">
-                    {!collapsed ? (
-                        <h1 className="text-xl font-bold">SimpleChat</h1>
-                    ) : (
-                        <div className="text-xl font-bold">SC</div>
-                    )}
-                </div>
+                {children.sidebarHeader}
 
-                <Menu
-                    theme="light"
-                    mode="inline"
-                    selectedKeys={[]}
-                    onClick={({ key }) => {
-                        if (key === 'add-channel') handleAddChannel();
-                    }}
-                    className="border-r-0"
-                    items={[
-                        {
-                            key: 'add-channel',
-                            icon: <PlusOutlined />,
-                            label: '添加频道',
-                        },
-                    ]}
-                />
+                {children.aiChannel}
 
-                <div className="channel-list flex-1 h-2/3 min-h-0">
-                    <Menu
-                        theme="light"
-                        mode="inline"
-                        selectedKeys={selectedKey ? [selectedKey] : []}
-                        onClick={({ key }) => {
-                            if (key !== 'empty' && key !== 'add-channel') {
-                                handleChannelClick(key);
-                            }
-                        }}
-                        className="border-r-0"
-                        items={[
-                            getItem(
-                                '频道列表',
-                                'channels',
-                                <UnorderedListOutlined />,
-                                channelListItems,
-                            ),
-                        ]}
-                    />
-                </div>
+                {children.addChannel}
+
+                {children.channelList}
 
                 {children.aboutWe}
             </Sider>
+
             {contextHolder}
             {/* channelModal */}
             <ChannelModal
-                authToken = {authToken}
-                modalState = {modalState}
-                setModalState = {setModalState}
+                authToken={authToken}
+                modalState={modalState}
+                setModalState={setModalState}
             />
         </>
     )

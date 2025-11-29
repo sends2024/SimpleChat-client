@@ -8,7 +8,7 @@ type getInviteCodeResponse = { invite_code: string }
 
 export const AdminChannelRequest = {
     createChannelRequest: async (payload: createChannelPayload) => {
-        return await http.patch<createChannelResponse>('/channel/create', {
+        return await http.post<createChannelResponse>('/channel/create', {
             channel_name: payload.channel_name
         })
     },

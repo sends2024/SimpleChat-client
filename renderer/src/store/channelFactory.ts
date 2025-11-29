@@ -21,6 +21,7 @@ type ChannelState = {
     getHistory: (beforeTime: string) => Promise<MessageSchema[]>
     getAllUsers: () => Promise<Array<{ user_id: string; username: string; avatar_url: string }>>
 }
+
 export const useChannelStoreFactory = (
     id: string,
     wsInfo: { uid: string; cid: string; token: string; username: string },

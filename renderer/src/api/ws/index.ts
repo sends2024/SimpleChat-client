@@ -17,7 +17,7 @@ export class WebSocketService {
             token: token
         }).toString()
 
-        this.url = `${window.env.serviceURL}/ws/chat?${params}`
+        this.url = `${window.env.wsServiceURL}/ws/chat?${params}`
 
         this.connect()
     }
