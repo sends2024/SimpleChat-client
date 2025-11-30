@@ -27,7 +27,6 @@ export class WebSocketService {
 
         this.ws.onopen = () => {
             console.log('连接频道')
-            this.startHeartbeat()
         }
 
         this.ws.onmessage = (event) => {
@@ -49,7 +48,6 @@ export class WebSocketService {
         this.ws.onclose = () => {
             // console.log('WebSocket closed')
 
-            this.stopHeartbeat()
 
             if (!this.isManualClose) {
                 // console.log('尝试重连中...')
@@ -75,22 +73,11 @@ export class WebSocketService {
         }
     }
 
-    /** 心跳保活 */
-    private startHeartbeat() {
-        this.heartbeatTimer = setInterval(() => {
-            this.send({ type: 'ping' })
-        }, this.heartbeatInterval)
-    }
-
-    private stopHeartbeat() {
-        clearInterval(this.heartbeatTimer)
-    }
 
     /** 手动关闭，不再重连 */
     close() {
         this.isManualClose = true
         this.ws.close()
-        this.stopHeartbeat()
     }
 }
 type wsInfo = {

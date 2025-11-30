@@ -60,10 +60,12 @@ export default function Sidebar({ collapsed }: SidebarProps) {
             }
 
             try {
-                channelStore.getAllChannels()
+                const channelInfoss = await channelStore.getAllChannels()
+                
 
                 const map: { [key: string]: string } = {}
-                channels.forEach((ch) => (map[ch.channelID] = ch.channelName))
+                
+                channelInfoss.forEach((ch) => (map[ch.channelID] = ch.channelName))
                 setChannelNames(map)
 
                 setSelectedKey('')
@@ -76,7 +78,7 @@ export default function Sidebar({ collapsed }: SidebarProps) {
         }
 
         fetchChannels()
-    }, [channels, authToken])
+    }, [])
 
     const handleAddChannel = () => {
         if (!authToken) {
@@ -102,8 +104,6 @@ export default function Sidebar({ collapsed }: SidebarProps) {
             console.error('启动应用程序失败:', error);
         }
     };
-
-
 
 
     const handleChannelClick = (key: string) => {

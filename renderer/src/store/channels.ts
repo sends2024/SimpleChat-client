@@ -1,5 +1,6 @@
 import { channelRequests } from '@/api'
 import type { ChannelSchema } from '@/models'
+import { log } from 'console'
 import { create } from 'zustand'
 type ChannelsStore = {
     channels: ChannelSchema[]
@@ -23,14 +24,17 @@ export const useChannelsStore = create<ChannelsStore>((set, get) => ({
         if (localStorage.getItem('authToken')) {
             const res = await channelRequests.getAllChannelsRequest()
 
-            const channels = res.channels.map((channel) => ({
+            const allChannels = res.channels.map((channel) => ({
                 channelID: channel.channel_id,
                 channelName: channel.channel_name,
                 isOwner: channel.is_owner
             }))
-            set({ channels })
-            return channels
+
+            set({ channels: allChannels })
+            
+            return allChannels
         }
+        
         return []
     }
 }))
