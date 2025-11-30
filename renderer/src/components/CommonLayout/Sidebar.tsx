@@ -107,8 +107,6 @@ export default function Sidebar({ collapsed }: SidebarProps) {
 
 
     const handleChannelClick = (key: string) => {
-        console.log(key, channelNames[key]);
-        
         setSelectedKey(key)
         channelStore.setCurrentChannel(key, channelNames[key], channels.find(ch => ch.channelID === key)?.isOwner || false)
     }

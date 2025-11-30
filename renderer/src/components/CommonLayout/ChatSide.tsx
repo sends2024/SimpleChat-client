@@ -19,6 +19,8 @@ export default function ChatSide({
 }: ChatPageProps) {
     const DEFAULT_USERNAME = '用户';
 
+    const [messages, setMessages] = useState<MessageSchema[]>([]);
+
     const channelStore = useChannelsStore()
     const currentChannel = channelStore.currentChannel
 
@@ -59,7 +61,7 @@ export default function ChatSide({
             try {
                 // 初始化
                 channelStoreFactory.getAllUsers();
-                channelStoreFactory.getHistory(beforeTime)
+                channelStoreFactory.getHistory('')
                 setBeforeTime('before time') // --> 到时候获取到beforeTime 直接传进去就行
 
                 if (!channelID) {
@@ -84,7 +86,7 @@ export default function ChatSide({
         return () => {
             channelStoreFactory.wsInfo.close()
         };
-    }, [channelID, authToken]);
+    }, [channelID]);
 
 
     const handleSendMessage = () => {
@@ -100,6 +102,8 @@ export default function ChatSide({
 
         channelStoreFactory.wsInfo.send(messageData);
         channelStoreFactory.pushNewMsg([messageData]);
+
+        setMessages(prev => [...prev, messageData]);
 
         setMessage('');
     }

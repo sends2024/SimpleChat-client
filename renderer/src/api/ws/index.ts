@@ -14,7 +14,7 @@ export class WebSocketService {
             user_id: uid,
             channel_id: cid,
             userName: userName,
-            token: token
+            token: "Bearer "  + token
         }).toString()
 
         this.url = `${window.env.wsServiceURL}/ws/chat?${params}`

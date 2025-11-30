@@ -73,10 +73,12 @@ export const useChannelStoreFactory = (
 
             return res.members
         },
-        pushNewMsg(msgs: MessageSchema[]) {
-            set((state) => ({
-                history: [...state.history, ...msgs]
-            }))
+        async pushNewMsg(msgs: MessageSchema[]) {
+            set((state) => {
+                const newHistory = [...state.history, ...msgs]
+                console.log('更新后的history:', newHistory) // 调试更新后状态
+                return { history: newHistory }
+            })
         }
     }))
 }
